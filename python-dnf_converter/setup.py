@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 setup(
     name='dnf-converter',
-    version='0.0.0',
+    version='0.0.1',
     license='MIT',
     description='An example package. Generated with cookiecutter-pylibrary.',
     long_description='%s\n%s' % (
@@ -32,7 +32,7 @@ setup(
     ),
     author='Christian Dressler',
     author_email='c.dressler@dressler-christian.de',
-    url='https://https://github.com/christe90/dnf_converter.git/christe90/python-dnf_converter',
+    url='https://github.com/christe90/python-dnf_converter',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
@@ -64,7 +64,7 @@ setup(
     project_urls={
         'Documentation': 'https://python-dnf_converter.readthedocs.io/',
         'Changelog': 'https://python-dnf_converter.readthedocs.io/en/latest/changelog.html',
-        'Issue Tracker': 'https://https://github.com/christe90/dnf_converter.git/christe90/python-dnf_converter/issues',
+        'Issue Tracker': 'https://github.com/christe90/python-dnf_converter/issues',
     },
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
