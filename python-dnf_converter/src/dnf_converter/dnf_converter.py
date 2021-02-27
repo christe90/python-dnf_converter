@@ -9,18 +9,28 @@ class Logic_expression():
         self.logic_expression_string = logic_expression_string
         self._get_symbolic_expression()
         self._get_symbols()
+        self._order_symbols()
         self._get_dnf()
 
     def _get_symbolic_expression(self):
         self.logic_expression_symbolic = parse_expr(self.logic_expression_string, evaluate = False)
-
+    
+    def _order_symbols(self):
+        symbols_list_string = list(self.used_symbols.keys())
+        symbols_list_string.sort()
+        symbols_lib = {}
+        for symbol_string in symbols_list_string:
+            symbols_lib[symbol_string] = self.used_symbols[symbol_string]
+        self.used_symbols = symbols_lib
+        self.symbols_list = list(symbols_lib.values())
+        
     def _get_symbols(self):
         symbol_lib = {}
         symbols_list = list(self.logic_expression_symbolic.atoms())
         for symbol in symbols_list:
             symbol_lib[str(symbol)] = symbols(str(symbol))
         self.used_symbols = symbol_lib
-        self.symbols_list = symbols_list
+
     
     def _get_truthtable(self):
         self.my_truthtable = Truth_table(self.logic_expression_symbolic, self.used_symbols)
@@ -73,10 +83,11 @@ class Truth_table():
             self.truth_table[i] = self._evaluate_entry(tt_entry)
 
 class Logic_expression_list():
-    def __init__(self,queue, full_expression_list):
+    def __init__(self, full_expression_list):
         self.full_expression_list = full_expression_list
+        self._process_parallel()
 
-    def _expression_list_worker(self, part_list):
+    def _expression_list_worker(self,queue, part_expression_list):
         result = {}
         for expression in part_expression_list:
             expression_instance = Logic_expression(expression)
@@ -85,18 +96,23 @@ class Logic_expression_list():
 
     def _process_parallel(self):
         cpu_count = os.cpu_count()
-        chunks_count = int(math.ceil(len(self.full_list) / cpu_count))
+        chunks_count = int(math.ceil(len(self.full_expression_list) / cpu_count))
         queue = multiprocessing.Queue()
         procs = []
-        for i in range(cpu_count):
-            proc = multiprocessing.Process(target=self._list_worker, args=(queue, self.full_expression_list[chunks_count*i:chunks_count*(i+1)]))
+        procs_range = range(0,min(cpu_count,len(self.full_expression_list)))
+        for i in procs_range:
+            proc = multiprocessing.Process(target=self._expression_list_worker, args=(queue, self.full_expression_list[chunks_count*i:chunks_count*(i+1)]))
             procs.append(proc)
             proc.start()
         
         results ={}
-        for i in range(cpu_count):
+        for i in procs_range:
             results.update(queue.get())
         
         for i in procs:
             i.join()
         self.results = results
+
+if __name__=='__main__':
+    full_expression_list = ['(A|B)&C','A&B','~A|B']
+    expr_List = Logic_expression_list(full_expression_list)
