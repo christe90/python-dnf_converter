@@ -115,7 +115,3 @@ class Logic_expression_list():
         for i in procs:
             i.join()
         self.results = results
-
-if __name__=='__main__':
-    full_expression_list = ['(A|B)&C','A&B','~A|B']
-    expr_List = Logic_expression_list(full_expression_list)
