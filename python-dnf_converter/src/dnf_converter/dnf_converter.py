@@ -115,3 +115,7 @@ class Logic_expression_list():
         for i in procs:
             i.join()
         self.results = results
+
+def get_dnfs(string_List):
+    my_Instance = Logic_expression_list(string_List)
+    return(my_Instance.results)

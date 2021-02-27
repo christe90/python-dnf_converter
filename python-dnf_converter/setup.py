@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 setup(
     name='dnf-converter',
-    version='0.0.3',
+    version='0.3.1',
     license='MIT',
     description='An example package. Generated with cookiecutter-pylibrary.',
     long_description='%s\n%s' % (

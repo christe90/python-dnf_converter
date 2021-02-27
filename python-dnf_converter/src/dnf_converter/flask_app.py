@@ -1,8 +1,13 @@
 from flask import Flask, url_for, request, render_template, redirect, make_response
 from werkzeug.utils import secure_filename
 import os
+from pathlib import Path
+from dnf_converter.dnf_converter import get_dnfs
 
-upload_files = "/home/uni/EP/logic_normalizer/flask_app/upload_files" #Order für die hochgeladenen Dateien
+if not Path(str(Path.home())+"/upload_files").exists():
+    os.mkdir(str(Path.home())+"/upload_files")
+upload_files = str(Path.home())+"/upload_files" #Order für die hochgeladenen Dateien
+
 extensions = set(['txt']) #Nur txt Dateien erlauben
 app = Flask(__name__)
 
@@ -19,17 +24,21 @@ def index():
     if request.method == "POST":
         if 'file' not in request.files:
             logic_expression = request.form["logic_expression"]
-            return render_template('index.html', logic_expressions=[logic_expression])
+            result = get_dnfs([logic_expression])
+            return render_template('index.html', result=result)
             
         file = request.files['file']
         if allowed(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_files, filename))
             file_content = read_file(file)
-            return render_template('index.html', logic_expressions = file_content)
+            result = get_dnfs(file_content)
+            print(result)
+            return render_template('index.html', result = result)
 
     else:
-        return render_template('index.html')
+        return render_template('index.html', result = {})
 
-if __name__ == '__main__':
+def start_flask():
     app.run(port=1337, debug = True)
+    

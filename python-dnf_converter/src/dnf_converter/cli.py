@@ -15,17 +15,27 @@ Why does this file exist, and why not put this in __main__?
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 import sys
-
+import argparse
+import dnf_converter as dnf
+import argparse
+from dnf_converter.flask_app import start_flask
+from dnf_converter.dnf_converter import get_dnfs
 
 def main(argv=sys.argv):
-    """
-    Args:
-        argv (list): List of arguments
-
-    Returns:
-        int: A return code
-
-    Does stuff.
-    """
-    print(argv)
+  parser=argparse.ArgumentParser()
+  parser.add_argument('--web', help='Start a Webserver', nargs='?', const=1, type=int)
+  parser.add_argument('--cli', help='Do not start a Webserver', nargs='+')
+  args=parser.parse_args()
+  if args.web is not None:
+    start_flask()
     return 0
+  elif args.cli is not None:
+    result = get_dnfs(args.cli)
+    return result
+  else:
+    print(args)
+    return 0
+  
+
+if __name__ == '__main__':
+  main()
