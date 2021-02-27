@@ -87,12 +87,15 @@ class Logic_expression_list():
         self.full_expression_list = full_expression_list
         self._process_parallel()
 
-    def _expression_list_worker(self,queue, part_expression_list):
+    def _expression_list_worker(self, part_expression_list,queue=None):
         result = {}
         for expression in part_expression_list:
             expression_instance = Logic_expression(expression)
             result[expression] = expression_instance.dnf_string
-        queue.put(result)
+        if queue == None:
+            return result
+        else:
+            queue.put(result)
 
     def _process_parallel(self):
         cpu_count = os.cpu_count()
@@ -101,7 +104,7 @@ class Logic_expression_list():
         procs = []
         procs_range = range(0,min(cpu_count,len(self.full_expression_list)))
         for i in procs_range:
-            proc = multiprocessing.Process(target=self._expression_list_worker, args=(queue, self.full_expression_list[chunks_count*i:chunks_count*(i+1)]))
+            proc = multiprocessing.Process(target=self._expression_list_worker, args=(self.full_expression_list[chunks_count*i:chunks_count*(i+1)], queue))
             procs.append(proc)
             proc.start()
         
