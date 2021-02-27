@@ -72,3 +72,7 @@ docs/_build
 
 # Mypy Cache
 .mypy_cache/
+
+# Flask Upload/Downloadfolders
+src/dnf_converter/flask_app/upload_files/*
+src/dnf_converter/flask_app/download_files/*

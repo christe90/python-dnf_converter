@@ -23,7 +23,7 @@ def read(*names, **kwargs):
 
 setup(
     name='dnf-converter',
-    version='0.0.1',
+    version='0.0.3',
     license='MIT',
     description='An example package. Generated with cookiecutter-pylibrary.',
     long_description='%s\n%s' % (
@@ -62,7 +62,7 @@ setup(
         'Topic :: Utilities',
     ],
     project_urls={
-        'Documentation': 'https://python-dnf_converter.readthedocs.io/',
+        'Documentation': 'https://python-dnf_converter.readthedocs.io/en/master/',
         'Changelog': 'https://python-dnf_converter.readthedocs.io/en/latest/changelog.html',
         'Issue Tracker': 'https://github.com/christe90/python-dnf_converter/issues',
     },
